@@ -55,3 +55,50 @@ loopF
 		
 		;POP		{R4, R5, R6, R7, PC}
 
+		.global	luciernagas
+		luciernagas:
+PUSH		{R4,		R5, R6, R7, LR}
+		
+		LDR		R0, =msg_luciernagas
+		BL		printf
+		
+		LDR		R0, =tabla_luciernagas
+		MOV		R1, #0
+		MOV		R2, #12
+		
+		MOV		R0, #1
+		BL		set_input_mode
+		BL		getchar
+		
+		loopL:
+		LDRB		R3, [R0, R1]
+		ADD		R1, R1, #1
+		
+		MOV		R0, R3
+		BL		disp
+		MOV		R0, R3
+		BL		leeds
+		MOV		R0, R2
+		BL		retardo
+		
+		SUBS		R2, R2, #1
+		BNE		loopL
+		
+		end_loopL:
+		BL		getchar
+		CMP		R0, #'\n'
+		BNE		end_loopL
+		
+		MOV		R0, #0
+		BL		set_input_mode
+		
+POP		{R4,		R5, R6, R7, PC}
+		
+		.data
+		msg_luciernagas:
+		.asciz	"INICIANDO LUCIERNAGAS...\n"
+		
+		tabla_luciernagas:
+		DCB		0x00, 0x44, 0x80, 0x25, 0x60, 0x00, 0x3A, 0x91, 0x04, 0x00, 0x48, 0x00
+
+
