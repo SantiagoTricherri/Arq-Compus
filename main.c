@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <ncurses.h>
 #include "EasyPIO.h"
+#include "funciones_ass.h"
 
 // Definiciones
 #define PASSWORD_LENGTH 5   // Longitud de la contraseña
@@ -17,8 +18,8 @@ void getPassword(char *password);          // Obtener la contraseña del usuario
 void showMenu();                           // Mostrar el menu principal
 void autoFantastico();                     // Secuencia "Auto Fantastico"
 void choque();                             // Secuencia "Choque"
-void luciernagas();                        // Secuencia "Luciernagas"
-void cohete();                             // Secuencia "Cohete"
+//void luciernagas();                        // Secuencia "Luciernagas"
+//void cohete();                             // Secuencia "Cohete"
 struct termios modifyTerminalConfig(void); // Configurar terminal
 void restoreTerminalConfig(struct termios);// Restaurar configuracion del terminal
 bool keyHit(int index);                    // Verificar pulsacion de teclas
@@ -102,7 +103,6 @@ void showMenu() {
         printf("2. El Choque\n");
         printf("3. Luciernagas\n");
         printf("4. Cohete\n");
-        printf("5. Resetear velocidad\n");
         printf("0. Salir\n");
         printf("------------------\n");
         printf("Seleccione una opcion: ");
@@ -120,12 +120,6 @@ void showMenu() {
                 break;
             case 4:
                 cohete(); // Ejecutar la secuencia "Cohete"
-                break;
-            case 5:
-                printf("Se reseteo la velocidad\n");
-                for (int i = 0; i < 4; i++) {
-                    delayTime[i] = 10000; // Resetear el tiempo de retardo
-                }
                 break;
             case 0:
                 printf("Saliendo...\n"); // Salir del programa
@@ -198,7 +192,7 @@ void choque() {
         }
     }
 }
-
+/*
 // Secuencia "Luciernagas"
 void luciernagas() {
     printf("\n--- Luciernagas ---\n");
@@ -280,7 +274,7 @@ void cohete() {
         delayTime[3] = 10000;
     }
 }
-
+*/
 
 // Configuración del terminal
 struct termios modifyTerminalConfig(void) {
