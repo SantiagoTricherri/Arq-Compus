@@ -1,26 +1,3 @@
-ENTRY                           ; Mark first instruction to execute
-
-menu:
-    MOV R1, #1                  ; Estado inicial del menú
-
-print_menu:
-    ; Imprime opciones del menú
-    LDR R0, =menu_string
-    BL printf                  ; Simular llamada a función de impresión de menú
-    LDR R0, =input_string
-    BL scanf                   ; Simular lectura de entrada del usuario
-
-    ; Código que simula la lectura de entrada del usuario, debería ser ajustado a su entorno específico
-    LDR R0, [R2]               ; Suponemos que R2 tiene la entrada del usuario
-
-    CMP R0, #0
-    BEQ done
-    CMP R0, #1
-    BEQ luciernagas         ; Cambia el número de opción a la función deseada
-    CMP R0, #2
-    BEQ cohete        ; Cambia el número de opción a la función deseada
-    B print_menu               ; Si no es válida, imprime menú nuevamente
-
 .text
 
 .global cohete
