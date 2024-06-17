@@ -216,7 +216,6 @@ void luciernagas() {
     }
 }
 
-// Secuencia "Cohete" mejorada y repetitiva
 void cohete() {
     printf("\n--- Cohete ---\n");
     printf("Presione esc para finalizar la secuencia\n");
@@ -226,26 +225,33 @@ void cohete() {
     unsigned char num;
 
     while (true) {
-        // Lanzamiento del cohete
+        // Lanzamiento del cohete con aceleración
         printf("Lanzamiento del cohete:\n");
         for (int i = 0; i < NUM_LEDS; i++) {
             num = 1 << i; // Desplazar un bit a la izquierda
             ledShow(num); // Mostrar el valor en los LEDs
             disp_binary(num); // Mostrar el valor en binario en la pantalla
-            if (delay(3) == 0) { // Esperar el retardo y verificar si se presiono una tecla
+            if (delay(3) == 0) { // Esperar el retardo y verificar si se presionó una tecla
                 turnOff(); // Apagar los LEDs
                 return; // Salir de la secuencia
             }
+            delayTime[3] -= 500; // Acelerar el lanzamiento
         }
 
-        // Ascenso del cohete
-        printf("Ascenso del cohete:\n");
-        num = 0x80; // Comenzar con el bit mas significativo
-        for (int i = 0; i < NUM_LEDS; i++) {
+        // Vuelo del cohete
+        printf("Vuelo del cohete:\n");
+        for (int j = 0; j < 5; j++) {
+            num = 0xFF; // Todos los LEDs encendidos
             ledShow(num); // Mostrar el valor en los LEDs
             disp_binary(num); // Mostrar el valor en binario en la pantalla
-            num >>= 1; // Desplazar a la derecha
-            if (delay(3) == 0) { // Esperar el retardo y verificar si se presiono una tecla
+            if (delay(3) == 0) { // Esperar el retardo y verificar si se presionó una tecla
+                turnOff(); // Apagar los LEDs
+                return; // Salir de la secuencia
+            }
+            num = 0x00; // Todos los LEDs apagados
+            ledShow(num); // Mostrar el valor en los LEDs
+            disp_binary(num); // Mostrar el valor en binario en la pantalla
+            if (delay(3) == 0) { // Esperar el retardo y verificar si se presionó una tecla
                 turnOff(); // Apagar los LEDs
                 return; // Salir de la secuencia
             }
@@ -253,24 +259,28 @@ void cohete() {
 
         // Explosión del cohete
         printf("Explosión del cohete:\n");
-        for (int j = 0; j < 3; j++) {
-            num = 0xFF; // Todos los LEDs encendidos
+        for (int j = 0; j < 10; j++) {
+            num = 0xAA; // Patrón alternante
             ledShow(num); // Mostrar el valor en los LEDs
             disp_binary(num); // Mostrar el valor en binario en la pantalla
-            if (delay(3) == 0) { // Esperar el retardo y verificar si se presiono una tecla
+            if (delay(3) == 0) { // Esperar el retardo y verificar si se presionó una tecla
                 turnOff(); // Apagar los LEDs
                 return; // Salir de la secuencia
             }
-            num = 0x00; // Todos los LEDs apagados
+            num = 0x55; // Patrón alternante inverso
             ledShow(num); // Mostrar el valor en los LEDs
             disp_binary(num); // Mostrar el valor en binario en la pantalla
-            if (delay(3) == 0) { // Esperar el retardo y verificar si se presiono una tecla
+            if (delay(3) == 0) { // Esperar el retardo y verificar si se presionó una tecla
                 turnOff(); // Apagar los LEDs
                 return; // Salir de la secuencia
             }
         }
+
+        // Restablecer el tiempo de retardo después de la explosión
+        delayTime[3] = 10000;
     }
 }
+
 
 // Configuración del terminal
 struct termios modifyTerminalConfig(void) {
