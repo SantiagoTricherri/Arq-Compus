@@ -1,150 +1,125 @@
-.section .text
-.global luciernagas, cohete
+ENTRY                           ; Mark first instruction to execute
 
-luciernagas:
-    PUSH {R4, R5, R6, R7, LR}  ; Guardar registros en la pila
-    LDR R0, =msg_luciernagas
-    BL printf
+menu:
+    MOV R1, #1                  ; Estado inicial del menú
 
-    LDR R0, =tabla_luciernagas
-    MOV R1, #0
-    MOV R2, #12
+print_menu:
+    ; Imprime opciones del menú
+    LDR R0, =menu_string
+    BL printf                  ; Simular llamada a función de impresión de menú
+    LDR R0, =input_string
+    BL scanf                   ; Simular lectura de entrada del usuario
 
-loop_luciernagas:
-    LDRB R3, [R0, R1]
-    ADD R1, R1, #1
+    ; Código que simula la lectura de entrada del usuario, debería ser ajustado a su entorno específico
+    LDR R0, [R2]               ; Suponemos que R2 tiene la entrada del usuario
 
-    ; Llamar a ledShow (simulado aquí)
-    ; MOV R0, R3
-    ; BL ledShow
-
-    ; Llamar a disp_binary (simulado aquí)
-    ; MOV R0, R3
-    ; BL disp_binary
-
-    ; Llamar a delay
-    MOV R0, #2
-    BL delay
     CMP R0, #0
-    BEQ end_luciernagas
+    BEQ done
+    CMP R0, #1
+    BEQ luciernagas         ; Cambia el número de opción a la función deseada
+    CMP R0, #2
+    BEQ cohete        ; Cambia el número de opción a la función deseada
+    B print_menu               ; Si no es válida, imprime menú nuevamente
 
-    SUBS R2, R2, #1
-    BNE loop_luciernagas
+.text
 
-end_luciernagas:
-    ; Llamar a turnOff
-    BL turnOff
-
-    POP {R4, R5, R6, R7, PC}  ; Restaurar registros y regresar
-
+.global cohete
 cohete:
-    PUSH {R4, R5, R6, R7, LR}  ; Guardar registros en la pila
+    ;PUSH    {R4, R5, R6, R7, LR}
 
-    ; Lanzamiento del cohete con aceleración
-    LDR R0, =msg_cohete
-    BL printf
+    ;LDR     R0, =msg_cohete
+    ;BL      printf
 
-    MOV R4, #0
-    MOV R7, #5
-loop_cohete_lanzamiento:
-    MOV R0, #1
-    LSL R0, R0, R4  ; Desplazar un bit a la izquierda por R4
+    MOV     R5, #0x80
+    MOV     R6, #0xC0
+    MOV     R4, #0x0
+    MOV     R7, #5
 
-    ; Llamar a ledShow (simulado aquí)
-    ; BL ledShow
+    MOV     R0, R4
+    ;BL      disp
+    ;BL      leeds
+    MOV     R0, R2
+    ;BL      retardo
 
-    ; Llamar a disp_binary (simulado aquí)
-    ; BL disp_binary
+loopC:
+    MOV     R4, R6
+    MOV     R0, R4
+    ;BL      disp
+    ;BL      leeds
+    LSR     R6, R6, #1
+    MOV     R0, R2
+    ;BL      retardo
 
-    MOV R0, #3
-    BL delay
-    CMP R0, #0
-    BEQ end_cohete
+    SUBS    R7, R7, #1
+    BNE     loopC
 
-    ADD R4, R4, #1
-    CMP R4, #8
-    BNE loop_cohete_lanzamiento
+end_loopC:
+    MOV     R5, #0xFF
+    MOV     R7, #2
 
-    ; Vuelo del cohete
-    MOV R7, #5
-loop_cohete_vuelo:
-    MOV R0, #0xFF
+loopF:
+    MOV     R0, R5
+    ;BL      disp
+    ;BL      leeds
+    MOV     R0, R2
+    ;BL      retardo
 
-    ; Llamar a ledShow (simulado aquí)
-    ; BL ledShow
+    SUBS    R7, R7, #1
+    BNE     loopF
 
-    ; Llamar a disp_binary (simulado aquí)
-    ; BL disp_binary
+    ;wait_enterC
+    ;BL      getchar
+    ;CMP     R0, #'\n'
+    ;BNE     wait_enterC
 
-    MOV R0, #3
-    BL delay
-    CMP R0, #0
-    BEQ end_cohete
+    ;MOV     R0, #0
+    ;BL      set_input_mode
 
-    MOV R0, #0x00
+    ;POP     {R4, R5, R6, R7, PC}
 
-    ; Llamar a ledShow (simulado aquí)
-    ; BL ledShow
+.global luciernagas
+luciernagas:
+    PUSH    {R4, R5, R6, R7, LR}
 
-    ; Llamar a disp_binary (simulado aquí)
-    ; BL disp_binary
+    LDR     R0, =msg_luciernagas
+    BL      printf
 
-    MOV R0, #3
-    BL delay
-    CMP R0, #0
-    BEQ end_cohete
+    LDR     R0, =tabla_luciernagas
+    MOV     R1, #0
+    MOV     R2, #12
 
-    SUBS R7, R7, #1
-    BNE loop_cohete_vuelo
+    MOV     R0, #1
+    BL      set_input_mode
+    BL      getchar
 
-    ; Explosión del cohete
-    MOV R7, #10
-loop_cohete_explosion:
-    MOV R0, #0xAA
+loopL:
+    LDRB    R3, [R0, R1]
+    ADD     R1, R1, #1
 
-    ; Llamar a ledShow (simulado aquí)
-    ; BL ledShow
+    MOV     R0, R3
+    BL      disp
+    MOV     R0, R3
+    BL      leeds
+    MOV     R0, R2
+    BL      retardo
 
-    ; Llamar a disp_binary (simulado aquí)
-    ; BL disp_binary
+    SUBS    R2, R2, #1
+    BNE     loopL
 
-    MOV R0, #3
-    BL delay
-    CMP R0, #0
-    BEQ end_cohete
+end_loopL:
+    BL      getchar
+    CMP     R0, #'\n'
+    BNE     end_loopL
 
-    MOV R0, #0x55
+    MOV     R0, #0
+    BL      set_input_mode
 
-    ; Llamar a ledShow (simulado aquí)
-    ; BL ledShow
-
-    ; Llamar a disp_binary (simulado aquí)
-    ; BL disp_binary
-
-    MOV R0, #3
-    BL delay
-    CMP R0, #0
-    BEQ end_cohete
-
-    SUBS R7, R7, #1
-    BNE loop_cohete_explosion
-
-end_cohete:
-    ; Restablecer el tiempo de retardo después de la explosión
-    LDR R0, =10000
-    STR R0, [delayTime, #3]
-
-    ; Llamar a turnOff
-    BL turnOff
-
-    POP {R4, R5, R6, R7, PC}  ; Restaurar registros y regresar
+    POP     {R4, R5, R6, R7, PC}
 
 .data
 msg_luciernagas:
-    .asciz "INICIANDO LUCIERNAGAS...\n"
+    .asciz  "INICIANDO LUCIERNAGAS...\n"
 
 tabla_luciernagas:
-    .byte 0x00, 0x44, 0x80, 0x25, 0x60, 0x00, 0x3A, 0x91, 0x04, 0x00, 0x48, 0x00
+    DCB     0x00, 0x44, 0x80, 0x25, 0x60, 0x00, 0x3A, 0x91, 0x04, 0x00, 0x48, 0x00
 
-msg_cohete:
-    .asciz "INICIANDO COHETE...\n"
