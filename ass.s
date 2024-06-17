@@ -4,9 +4,6 @@
 cohete:
     PUSH {R4, R5, R6, R7, LR}
 
-    LDR R0, =msg_cohete
-    BL printf
-
     MOV R5, #0x80
     MOV R6, #0xC0
     MOV R4, #0x0
@@ -56,9 +53,6 @@ loopF:
 luciernagas:
     PUSH {R4, R5, R6, R7, LR}
 
-    LDR R0, =msg_luciernagas
-    BL printf
-
     LDR R2, =tabla_luciernagas
     MOV R1, #0
     MOV R3, #12
@@ -84,11 +78,16 @@ end_loopL:
     POP {R4, R5, R6, R7, PC}
 
 .data
-msg_cohete:
-    .asciz "INICIANDO COHETE...\n"
-
-msg_luciernagas:
-    .asciz "INICIANDO LUCIERNAGAS...\n"
-
 tabla_luciernagas:
-    .byte 0x00, 0x44, 0x80, 0x25, 0x60, 0x00, 0x3A, 0x91, 0x04, 0x00, 0x48, 0x00
+    .byte 0x00
+    .byte 0x44
+    .byte 0x80
+    .byte 0x25
+    .byte 0x60
+    .byte 0x00
+    .byte 0x3A
+    .byte 0x91
+    .byte 0x04
+    .byte 0x00
+    .byte 0x48
+    .byte 0x00
