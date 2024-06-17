@@ -71,3 +71,37 @@ explosion_loop:
 end_cohete:
     BL turnOff
     POP {R4, R5, R6, R7, PC}
+
+    .global luciernagas
+luciernagas:
+    PUSH {R4, R5, R6, LR}
+
+    LDR R4, =pattern
+    MOV R5, #12  // Tamaño del patrón
+
+loop_luciernagas:
+    LDRB R6, [R4], #1
+
+    MOV R0, R6
+    BL disp_binary
+
+    MOV R0, R6
+    BL ledShow
+
+    MOV R0, #2
+    BL delay
+
+    SUBS R5, R5, #1
+    BEQ end_luciernagas
+
+    CMP R0, #0
+    BNE loop_luciernagas
+
+    BL turnOff
+
+end_luciernagas:
+    POP {R4, R5, R6, PC}
+
+.data
+pattern:
+.byte 0x00, 0x44, 0x80, 0x25, 0x60, 0x00, 0x3A, 0x91, 0x04, 0x00, 0x48, 0x00
