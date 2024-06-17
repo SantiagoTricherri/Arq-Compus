@@ -13,7 +13,7 @@ cohete:
     BL disp_binary
     MOV R0, R4
     BL ledShow
-    MOV R0, #3
+    MOV R0, #10
     BL delay
 
 loopC:
@@ -23,7 +23,7 @@ loopC:
     MOV R0, R4
     BL ledShow
     LSR R6, R6, #1
-    MOV R0, #3
+    MOV R0, #10
     BL delay
 
     SUBS R7, R7, #1
@@ -38,7 +38,7 @@ loopF:
     BL disp_binary
     MOV R0, R5
     BL ledShow
-    MOV R0, #3
+    MOV R0, #10
     BL delay
 
     SUBS R7, R7, #1
@@ -56,6 +56,13 @@ luciernagas:
     LDR R2, =tabla_luciernagas
     MOV R1, #0
     MOV R3, #12
+
+    MOV R0, R4
+    BL disp_binary
+    MOV R0, R4
+    BL ledShow
+    MOV R0, #10
+    BL delay
 
 loopL:
     LDRB R4, [R2, R1]
