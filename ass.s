@@ -50,3 +50,4 @@ loopParpadeo:
 
     BL apagar_leds
     POP {R4, PC}
+    .END
