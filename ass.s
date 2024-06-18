@@ -16,15 +16,15 @@ loopLuciernagas:
     BL display_binary
 
     MOV R0, R4
-    BL ledShow
+    BL mostrar_leds
 
     MOV R0, #0           // Index for delay array
-    BL delay
+    BL retardo
 
     CMP R0, #0
     BNE loopLuciernagas
 
-    BL turnOff
+    BL apagar_leds
     POP {R4, R5, PC}
 
 
@@ -39,14 +39,14 @@ loopParpadeo:
     BL display_binary
 
     MOV R0, R4
-    BL ledShow
+    BL mostrar_leds
 
     EOR R4, R4, #0xFF    // Toggle bits
     MOV R0, #1           // Index for delay array
-    BL delay
+    BL retardo
 
     CMP R0, #0
     BNE loopParpadeo
 
-    BL turnOff
+    BL apagar_leds
     POP {R4, PC}
