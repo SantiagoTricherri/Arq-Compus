@@ -334,13 +334,29 @@ void ledShow(unsigned char output) {
 
 // Función de retardo para las secuencias
 int delay(int index) {
+    struct termios oldattr = modifyTerminalConfig(); // Configurar el terminal
+    int ch, oldf;
+
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0); // Obtener flags actuales
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK); // Establecer modo no bloqueante
+
     for (int i = delayTime[index]; i > 0; i -= 100) {
         usleep(100); // Retardo en microsegundos
-        if (keyHit(index)) {
-            return 0; // Si se presiono una tecla, salir
+        ch = getchar(); // Leer caracter
+
+        if (ch == 'w' && delayTime[index] > 100) {
+            delayTime[index] -= 100; // Aumentar la velocidad
+        }
+        if (ch == 's') {
+            delayTime[index] += 100; // Disminuir la velocidad
+        }
+
+        if (ch == 27) { // Si se presiona ESC
+            restoreTerminalConfig(oldattr); // Restaurar configuracion del terminal
+            fcntl(STDIN_FILENO, F_SETFL, oldf); // Restaurar flags originales
+            return 0; // Indicar que se presiono ESC
         }
     }
-    return 1; // Continuar si no se presiono una tecla
 }
 
 // Limpiar el buffer de entrada
