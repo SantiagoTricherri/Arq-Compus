@@ -27,12 +27,12 @@ loopLuciernagas:
     BL turnOff
     POP {R4, R5, PC}
 
+
 .global parpadeo
 parpadeo:
-    PUSH {R4, R5, LR}
+    PUSH {R4, LR}
 
     MOV R4, #0xFF        // Initialize output for blinking
-    MOV R5, #10          // Loop counter
 
 loopParpadeo:
     MOV R0, R4
@@ -45,8 +45,8 @@ loopParpadeo:
     MOV R0, #1           // Index for delay array
     BL delay
 
-    SUBS R5, R5, #1
+    CMP R0, #0
     BNE loopParpadeo
 
     BL turnOff
-    POP {R4, R5, PC}
+    POP {R4, PC}
