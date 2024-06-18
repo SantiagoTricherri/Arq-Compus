@@ -1,5 +1,4 @@
 .text 
-
 .global cascadaDescendente
 cascadaDescendente:
     PUSH {R4, R5, LR}
@@ -7,6 +6,7 @@ cascadaDescendente:
 
 loop_down:
     MOV R0, R4    // Carga el valor actual de los LEDs
+    BL ledShow
     BL leeds
     BL disp_binary
     LSL R4, R4, #1  // Desplaza hacia la izquierda para el próximo LED
@@ -16,22 +16,24 @@ loop_down:
 
 loop_up:
     MOV R0, R4
+    BL ledShow
     BL leeds
     BL disp_binary
     LSR R4, R4, #1  // Desplaza hacia la derecha para el próximo LED
     CMP R4, #0      // Verifica si se apagaron todos los LEDs
     BNE wait_up
-
     POP {R4, R5, LR}
     BX LR
 
 wait_down:
     MOV R0, #2      // Usa el índice 2 para el delay
+    BL delay
     BL retardo
     B loop_down
 
 wait_up:
     MOV R0, #2      // Usa el índice 2 para el delay
+    BL delay
     BL retardo
     B loop_up
 
@@ -39,23 +41,21 @@ wait_up:
 parpadeoCentral:
     PUSH {R4, R5, R6, LR}
     LDR R4, =grupos
-
     MOV R6, #7      // Contador para el ciclo de grupos
-
 loop:
     LDR R5, [R4], #1  // Carga el valor del grupo de LEDs y avanza el puntero
     MOV R0, R5
+    BL ledShow
     BL leeds
     BL disp_binary
     MOV R0, #2
+    BL delay
     BL retardo
     SUBS R6, R6, #1
     CMP R6, #0
     BNE loop
-
     POP {R4, R5, R6, LR}
     BX LR
-
 .data
 grupos:
     .byte 0x18, 0x3C, 0x7E, 0xFF, 0x7E, 0x3C, 0x18
