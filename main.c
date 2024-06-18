@@ -65,8 +65,8 @@ int main(void) {
 void disp_binary(int i) {
     int t;
     for (t = 128; t > 0; t = t / 2) { // Iterar sobre los bits
-        if (i & t) printf("* ");      // Si el bit esta encendido, mostrar "1"
-        else printf("_ ");            // Si el bit esta apagado, mostrar "0"
+        if (i & t) printf("* ");      // Si el bit esta encendido, mostrar "*"
+        else printf("_ ");            // Si el bit esta apagado, mostrar "_"
     }
     fflush(stdout); // Vaciar el buffer de salida
     printf("\r");   // Retorno de carro
@@ -124,8 +124,8 @@ void showMenu() {
 void autoFantastico() {
     printf("\n--- Auto Fantastico ---\n");
     printf("Presione esc para finalizar la secuencia\n");
-    printf("Presione W para aumentar la velocidad\n");
-    printf("Presione S para disminuir la velocidad\n");
+    printf("Presione U para aumentar la velocidad\n");
+    printf("Presione D para disminuir la velocidad\n");
     unsigned char output;
     while (true) {
         output = 0x80; // Comenzar con el bit mas significativo
@@ -154,8 +154,8 @@ void autoFantastico() {
 void choque() {
     printf("\n--- Choque ---\n");
     printf("Presione esc para finalizar la secuencia\n");
-    printf("Presione W para aumentar la velocidad\n");
-    printf("Presione S para disminuir la velocidad\n");
+    printf("Presione U para aumentar la velocidad\n");
+    printf("Presione D para disminuir la velocidad\n");
     unsigned char output, aux1, aux2;
     while (true) {
         aux1 = 0x80; // LED mas significativo
@@ -176,8 +176,8 @@ void choque() {
 
 /*void luciernagas() {
     printf("Presione esc para finalizar la secuencia\n");
-    printf("Presione W para aumentar la velocidad\n");
-    printf("Presione S para disminuir la velocidad\n");
+    printf("Presione U para aumentar la velocidad\n");
+    printf("Presione D para disminuir la velocidad\n");
     printf("Luciernagas:\n");
 
     unsigned char output;
@@ -195,8 +195,8 @@ void choque() {
 
 void parpadeo() {
     printf("Presione esc para finalizar la secuencia\n");
-    printf("Presione W para aumentar la velocidad\n");
-    printf("Presione S para disminuir la velocidad\n");
+    printf("Presione U para aumentar la velocidad\n");
+    printf("Presione D para disminuir la velocidad\n");
     printf("Parpadeo:\n");
 
     unsigned char output = 0xFF;
@@ -231,10 +231,10 @@ bool keyHit(int index) {
     oldf = fcntl(STDIN_FILENO, F_GETFL, 0); // Obtener flags actuales
     fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK); // Establecer modo no bloqueante
     ch = getchar(); // Leer caracter
-    if (ch == 'w' && delayTime[index] > 100) {
+    if (ch == 'u' && delayTime[index] > 100) {
         delayTime[index] -= 100; // Aumentar la velocidad
     }
-    if (ch == 's') {
+    if (ch == 'd') {
         delayTime[index] += 100; // Disminuir la velocidad
     }
     restoreTerminalConfig(oldattr); // Restaurar configuracion del terminal
