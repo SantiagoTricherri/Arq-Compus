@@ -16,8 +16,8 @@ void getPassword(char *password);          // Obtener la contraseña del usuario
 void showMenu();                           // Mostrar el menu principal
 void autoFantastico();                     // Secuencia "Auto Fantastico"
 void choque();                             // Secuencia "Choque"
-//void cascadaDescendente();
-//void parpadeoCentral();                             // Secuencia "ParpadeoCentral"
+void carrera();
+void parpadeo();
 struct termios modifyTerminalConfig(void); // Configurar terminal
 void restoreTerminalConfig(struct termios);// Restaurar configuracion del terminal
 bool keyHit(int index);                    // Verificar pulsacion de teclas
@@ -89,8 +89,8 @@ void showMenu() {
         printf("------------------\n");
         printf("1. Auto Fantastico\n");
         printf("2. El Choque\n");
-        printf("3. Cascada Descendente\n");
-        printf("4. Parpadeo Central\n");
+        printf("3. Parpadeo\n");
+        printf("4. Carrera\n");
         printf("0. Salir\n");
         printf("------------------\n");
         printf("Seleccione una opcion: ");
@@ -103,10 +103,10 @@ void showMenu() {
                 choque(); // Ejecutar la secuencia "Choque"
                 break;
             case 3:
-                cascadaDescendente(); 
+                parpadeo();
                 break;
             case 4:
-                parpadeoCentral(); 
+                carrera();
                 break;
             case 0:
                 printf("Saliendo...\n"); // Salir del programa
@@ -169,53 +169,59 @@ void choque() {
         }
     }
 }
-/* void cascadaDescendente() {
-    printf("Press ESC to end the sequence\n");
-    printf("Press W to increase speed\n");
-    printf("Press S to decrease speed\n");
-    printf("Cascada Descendente:\n");
+
+void carrera() {
+    printf("Presione esc para finalizar la secuencia\n");
+    printf("Presione W para aumentar la velocidad\n");
+    printf("Presione S para disminuir la velocidad\n");
+    printf("Carrera:\n");
 
     unsigned char output = 0x1;
-    for (int i = 0; i < 8; i++) {
-        ledShow(output);
-        disp_binary(output);
-        output <<= 1;
-        if (delay(2) == 0) {
-            turnOff();
-            return;
-        }
-    }
-    output = 0x80;
-    for (int i = 0; i < 8; i++) {
-        ledShow(output);
-        disp_binary(output);
-        output >>= 1;
-        if (delay(2) == 0) {
-            turnOff();
-            return;
-        }
-    }
-}
-
-void parpadeoCentral() {
-    printf("Press ESC to end the sequence\n");
-    printf("Press W to increase speed\n");
-    printf("Press S to decrease speed\n");
-    printf("Parpadeo Central:\n");
-
-    unsigned char grupos[] = {0x18, 0x3C, 0x7E, 0xFF, 0x7E, 0x3C, 0x18};
-    int indiceGrupo = 0;
     while (true) {
-        ledShow(grupos[indiceGrupo]);
-        disp_binary(grupos[indiceGrupo]);
-        indiceGrupo = (indiceGrupo + 1) % 7;
-        if (delay(2) == 0) {
+        for (int i = 0; i < 8; i++) {
+            ledShow(output);
+            disp_binary(output);
+            output = output << 1;
+            if (delay(0) == 0) {
+                turnOff();
+                return;
+            }
+        }
+        output = 0x1;
+    }
+}
+
+void parpadeo() {
+    printf("Presione esc para finalizar la secuencia\n");
+    printf("Presione W para aumentar la velocidad\n");
+    printf("Presione S para disminuir la velocidad\n");
+    printf("Parpadeo:\n");
+
+    unsigned char output = 0xFF;
+    while (true) {
+        ledShow(output);
+        disp_binary(output);
+        if (delay(1) == 0) {
             turnOff();
             return;
         }
+        output = ~output;
     }
 }
-*/
+
+void adjustSpeed(int index) {
+    struct termios oldattr = modifyTerminalConfig();
+    int ch = getchar();
+    if(ch == 119) { // W key
+        if(delayTime[index] > 1000) {
+            delayTime[index] -= 1000;
+        }
+    } else if(ch == 115) { // S key
+        delayTime[index] += 1000;
+    }
+    restoreTerminalConfig(oldattr);
+}
+
 // Configuración del terminal
 struct termios modifyTerminalConfig(void) {
     struct termios oldattr, newattr;
