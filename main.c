@@ -12,8 +12,9 @@
 // Definiciones
 #define PASSWORD_LENGTH 5   // Longitud de la contraseña
 #define NUM_LEDS 8          // Numero de LEDs
+
 // Declaraciones de funciones
-void disp_binary(int);                     // Mostrar valor en binario
+void display_binary(int);                     // Mostrar valor en binario
 void getPassword(char *password);          // Obtener la contraseña del usuario
 void showMenu();                           // Mostrar el menu principal
 void autoFantastico();                     // Secuencia "Auto Fantastico"
@@ -49,20 +50,27 @@ int main(void) {
                 break;
             }
         }
-        // Si la contraseña es correcta, mostrar el menu
+        // Si la contraseña es correcta, mostrar el menú
         if (passwordFlag) {
-            printf("Bienvenido :)\n\n");
+            printf("\n=====================================\n");
+            printf("       ¡Acceso concedido! Bienvenido  \n");
+            printf("=====================================\n");
             showMenu();
-            printf("Trabajo terminado!!\n");
+            printf("\n=====================================\n");
+            printf("         Sesión terminada, ¡adiós!    \n");
+            printf("=====================================\n");
             break;
         } else {
-            printf("La clave es incorrecta...!\n\n"); // Mensaje de error
+            printf("\n-------------------------------------\n");
+            printf("    La clave es incorrecta, intente nuevamente\n");
+            printf("-------------------------------------\n\n");
         }
     }
     return 0; // Terminar el programa
 }
+
 // Función para mostrar un valor en binario
-void disp_binary(int i) {
+void display_binary(int i) {
     int t;
     for (t = 128; t > 0; t = t / 2) { // Iterar sobre los bits
         if (i & t) printf("* ");      // Si el bit esta encendido, mostrar "*"
@@ -88,38 +96,41 @@ void showMenu() {
     int option;
     do {
         clearInputBuffer(); // Limpiar el buffer de entrada
-        printf("\n------------------\n");
-        printf("   Menu Principal\n");
-        printf("------------------\n");
-        printf("1. Auto Fantastico\n");
-        printf("2. El Choque\n");
-        printf("3. Parpadeo\n");
-        printf("4. Luciernagas\n");
-        printf("0. Salir\n");
-        printf("------------------\n");
-        printf("Seleccione una opcion: ");
-        scanf("%d", &option); // Leer la opcion seleccionada
+        printf("\n=====================================\n");
+        printf("            MENU PRINCIPAL            \n");
+        printf("=====================================\n");
+        printf("1. Auto Fantástico                   \n");
+        printf("2. El Choque                         \n");
+        printf("3. Parpadeo                          \n");
+        printf("4. Luciérnagas                       \n");
+        printf("0. Salir                             \n");
+        printf("=====================================\n");
+        printf("Seleccione una opción: ");
+        scanf("%d", &option); // Leer la opción seleccionada
+        printf("\n");
+
         switch (option) {
             case 1:
-                autoFantastico(); // Ejecutar la secuencia "Auto Fantastico"
+                autoFantastico(); // Ejecutar la secuencia "Auto Fantástico"
                 break;
             case 2:
                 choque(); // Ejecutar la secuencia "Choque"
                 break;
             case 3:
-                parpadeo();
+                parpadeo(); // Ejecutar la secuencia "Parpadeo"
                 break;
             case 4:
-                luciernagas();
+                luciernagas(); // Ejecutar la secuencia "Luciérnagas"
                 break;
             case 0:
                 printf("Saliendo...\n"); // Salir del programa
                 break;
             default:
-                printf("Seleccione una opcion valida\n"); // Mensaje de error
+                printf("Seleccione una opción válida\n"); // Mensaje de error
         }
-    } while (option != 0); // Repetir hasta que se seleccione la opcion de salir
+    } while (option != 0); // Repetir hasta que se seleccione la opción de salir
 }
+
 // Secuencia "Auto Fantastico"
 void autoFantastico() {
     printf("\n--- Auto Fantastico ---\n");
@@ -131,7 +142,7 @@ void autoFantastico() {
         output = 0x80; // Comenzar con el bit mas significativo
         for (int i = 0; i < NUM_LEDS; i++) {
             ledShow(output); // Mostrar el valor en los LEDs
-            disp_binary(output); // Mostrar el valor en binario en la pantalla
+            display_binary(output); // Mostrar el valor en binario en la pantalla
             output >>= 1; // Desplazar a la derecha
             if (delay(0) == 0) { // Esperar el retardo y verificar si se presiono una tecla
                 turnOff(); // Apagar los LEDs
@@ -141,7 +152,7 @@ void autoFantastico() {
         output = 0x02; // Comenzar con el segundo bit mas bajo
         for (int i = 0; i < 6; i++) {
             ledShow(output); // Mostrar el valor en los LEDs
-            disp_binary(output); // Mostrar el valor en binario en la pantalla
+            display_binary(output); // Mostrar el valor en binario en la pantalla
             output <<= 1; // Desplazar a la izquierda
             if (delay(0) == 0) { // Esperar el retardo y verificar si se presiono una tecla
                 turnOff(); // Apagar los LEDs
@@ -163,7 +174,7 @@ void choque() {
         for (int i = 0; i < 7; i++) {
             output = aux1 | aux2; // Combinar los dos LEDs
             ledShow(output); // Mostrar el valor en los LEDs
-            disp_binary(output); // Mostrar el valor en binario en la pantalla
+            display_binary(output); // Mostrar el valor en binario en la pantalla
             aux1 >>= 1; // Desplazar aux1 a la derecha
             aux2 <<= 1; // Desplazar aux2 a la izquierda
             if (delay(1) == 0) { // Esperar el retardo y verificar si se presiono una tecla
@@ -184,7 +195,7 @@ void choque() {
     while (true) {
         output = rand() % 256; // Generate random pattern
         ledShow(output);
-        disp_binary(output);
+        display_binary(output);
         if (delay(0) == 0) {
             turnOff();
             return;
@@ -202,7 +213,7 @@ void parpadeo() {
     unsigned char output = 0xFF;
     while (true) {
         ledShow(output);
-        disp_binary(output);
+        display_binary(output);
         if (delay(1) == 0) {
             turnOff();
             return;
