@@ -5,8 +5,10 @@
 #include <stdbool.h>
 #include <fcntl.h>
 #include <ncurses.h>
+#include <time.h>
 #include "EasyPIO.h"
-#include "funciones_ass.h"
+#include "assembly_functions.h"
+
 // Definiciones
 #define PASSWORD_LENGTH 5   // Longitud de la contraseña
 #define NUM_LEDS 8          // Numero de LEDs
@@ -16,8 +18,8 @@ void getPassword(char *password);          // Obtener la contraseña del usuario
 void showMenu();                           // Mostrar el menu principal
 void autoFantastico();                     // Secuencia "Auto Fantastico"
 void choque();                             // Secuencia "Choque"
-void carrera();
-void parpadeo();
+//void parpadeo();
+//void luciernagas();
 struct termios modifyTerminalConfig(void); // Configurar terminal
 void restoreTerminalConfig(struct termios);// Restaurar configuracion del terminal
 bool keyHit(int index);                    // Verificar pulsacion de teclas
@@ -26,9 +28,12 @@ int delay(int index);                      // Funcion de retardo
 void clearInputBuffer();                   // Limpiar el buffer de entrada 
 void turnOff();                            // Apagar los LEDs
 void ledShow(unsigned char output);        // Mostrar LEDs
+void adjustSpeed(int index);
+
 // Variables globales
 const unsigned char led[NUM_LEDS] = {14, 15, 18, 23, 24, 25, 8, 7}; // Pines de los LEDs
 int delayTime[] = {10000, 10000, 10000, 10000};                    // Tiempo de retardo inicial
+
 // Función principal
 int main(void) {
     pinSetup(); // Inicializar los pines de los LEDs
@@ -90,7 +95,7 @@ void showMenu() {
         printf("1. Auto Fantastico\n");
         printf("2. El Choque\n");
         printf("3. Parpadeo\n");
-        printf("4. Carrera\n");
+        printf("4. Luciernagas\n");
         printf("0. Salir\n");
         printf("------------------\n");
         printf("Seleccione una opcion: ");
@@ -106,7 +111,7 @@ void showMenu() {
                 parpadeo();
                 break;
             case 4:
-                carrera();
+                luciernagas();
                 break;
             case 0:
                 printf("Saliendo...\n"); // Salir del programa
@@ -170,24 +175,22 @@ void choque() {
     }
 }
 
-void carrera() {
+/*void luciernagas() {
     printf("Presione esc para finalizar la secuencia\n");
     printf("Presione W para aumentar la velocidad\n");
     printf("Presione S para disminuir la velocidad\n");
-    printf("Carrera:\n");
+    printf("Luciernagas:\n");
 
-    unsigned char output = 0x1;
+    unsigned char output;
     while (true) {
-        for (int i = 0; i < 8; i++) {
-            ledShow(output);
-            disp_binary(output);
-            output = output << 1;
-            if (delay(0) == 0) {
-                turnOff();
-                return;
-            }
+        output = rand() % 256; // Generate random pattern
+        ledShow(output);
+        disp_binary(output);
+        if (delay(0) == 0) {
+            turnOff();
+            return;
         }
-        output = 0x1;
+        adjustSpeed(0); // Adjust speed
     }
 }
 
@@ -207,7 +210,7 @@ void parpadeo() {
         }
         output = ~output;
     }
-}
+}*/
 
 void adjustSpeed(int index) {
     struct termios oldattr = modifyTerminalConfig();
