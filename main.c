@@ -15,8 +15,8 @@ void getPassword(char *password);
 void menu();
 void autoFantastico();
 void choque();
-void cascadaDescendente();
-void parpadeoCentral();
+//void cascadaDescendente();
+//void parpadeoCentral();
 struct termios modifyTerminalConfig(void);
 void restoreTerminalConfig(struct termios);
 bool keyHit(int index);
@@ -96,7 +96,7 @@ void menu() {
     } while (option != 0);
 }
 
-void cascadaDescendente() {
+/* void cascadaDescendente() {
     printf("Press ESC to end the sequence\n");
     printf("Press W to increase speed\n");
     printf("Press S to decrease speed\n");
@@ -142,6 +142,7 @@ void parpadeoCentral() {
         }
     }
 }
+*/
 
 struct termios modifyTerminalConfig(void) {
     struct termios oldattr, newattr;
