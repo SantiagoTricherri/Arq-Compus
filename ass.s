@@ -1,188 +1,61 @@
-.text
+.text 
 
-.global cohete
-cohete:
-    PUSH {R4, R5, R6, R7, LR}
-.extern delay 
+.global cascadaDescendente
+cascadaDescendente:
+    PUSH {R4, R5, LR}
+    MOV R4, #0x1  // Inicia con el LED más a la derecha encendido
 
-.extern ledShow
-.extern disp_binary
-.extern turnOff
-.extern ledShow
-.extern delay
-.extern keyHit
-
-    MOV R5, #0x80
-    MOV R6, #0xC0
-    MOV R4, #0x0
-    MOV R7, #5
-cohete:
-    PUSH {R4, R5, R6, R7, LR}
-
-    // Inicializar variables
-    MOV R7, #10        
-    MOV R5, #8         
-    MOV R6, #5         
-    MOV R4, #10        
-
-    MOV R0, R4
+loop_down:
+    MOV R0, R4    // Carga el valor actual de los LEDs
+    BL ledShow
     BL disp_binary
+    LSL R4, R4, #1  // Desplaza hacia la izquierda para el próximo LED
+    CMP R4, #0x100  // Verifica si todos los LEDs ya se encendieron
+    BNE wait_down
+    MOV R4, #0x80   // Reinicia desde el LED más a la izquierda
+
+loop_up:
     MOV R0, R4
     BL ledShow
-    MOV R0, #10
-    BL delay
-launch:
-
-    MOV R3, #0        
-launch_loop:
-    CMP R3, R5        
-    BGE flight        
-
-    MOV R0, #1
-    LSL R0, R0, R3    
-    BL ledShow        
-    MOV R0, R0        
-    BL disp_binary   
-
-
-    MOV R0, #3        
-    MOV R1, #1        
-    BL delay_wrapper
-    BL check_key      
-
-
-    SUBS R7, R7, #500 
-    ADD R3, R3, #1    
-    B launch_loop     
-
-flight:
-
-    MOV R3, #0        
-flight_loop:
-    CMP R3, R6        
-    BGE explosion     
-
-    MOV R0, #0xFF     
-    BL ledShow        
-    MOV R0, R0        
-    BL disp_binary    
-
-
-    MOV R0, #3        
-    MOV R1, #1        
-    BL delay_wrapper
-    BL check_key      
-
-    MOV R0, #0x00     
-    BL ledShow        
-    MOV R0, R0        
-    BL disp_binary    
-
-loopC:
-    MOV R4, R6
-    MOV R0, R4
     BL disp_binary
-    MOV R0, R4
-    BL ledShow
-    LSR R6, R6, #1
-    MOV R0, #10
+    LSR R4, R4, #1  // Desplaza hacia la derecha para el próximo LED
+    CMP R4, #0      // Verifica si se apagaron todos los LEDs
+    BNE wait_up
 
-    MOV R0, #3       
-    MOV R1, #1       
-    BL delay_wrapper
-    BL check_key      
+    POP {R4, R5, LR}
+    BX LR
 
-    ADD R3, R3, #1    
-    B flight_loop     
-
-explosion:
-
-    MOV R3, #0       
-explosion_loop:
-    CMP R3, R4        
-    BGE reset_delay   
-
-    MOV R0, #0xAA     
-    BL ledShow        
-    MOV R0, R0        
-    BL disp_binary    
-
-
-    MOV R0, #3        
-    MOV R1, #1        
-    BL delay_wrapper
-    BL check_key      
-
-    MOV R0, #0x55    
-    BL ledShow        
-    MOV R0, R0        
-    BL disp_binary    
-
-
-    MOV R0, #3       
-    MOV R1, #1        
-    BL delay_wrapper
-    BL check_key      
-
-    ADD R3, R3, #1    
-    B explosion_loop  
-
-reset_delay:
-
-    MOV R7, #10000
-    B launch         
-
-check_key:
-    MOV R0, #3        
-    MOV R1, #1        
-    BL keyHit        
-    CMP R0, #0        
-    BEQ continue_seq 
-
-    BL turnOff        
-    POP {R4, R5, R6, R7, LR}
-    BX LR             
-
-continue_seq:
-    BX LR             
-
-delay_wrapper:
-    PUSH {LR}        
-    MOV R0, R7        
+wait_down:
+    MOV R0, #2      // Usa el índice 2 para el delay
     BL delay
-    POP {LR}         
-    MOV PC, LR       
+    B loop_down
 
+wait_up:
+    MOV R0, #2      // Usa el índice 2 para el delay
+    BL delay
+    B loop_up
 
-  .global luciernagas
-.extern ledShow
-.extern disp_binary
-.extern turnOff
-.extern delayC
-luciernagas:
-    push {lr}              
-    ldr r4, =pattern       
-    mov r5, #12            
-    mov r6, #2             
-loop_start:
-    ldrb r0, [r4]          
-    bl ledShow             
-    mov r1, r0             
-    bl disp_binary         
-    bl delay_wrapper       
-    add r4, r4, #1         
-    subs r5, r5, #1        
-    bgt loop_start         
-    bl turnOff             
-    pop {lr}               
-    mov pc, lr             
-delay_wrapper:
-    push {lr}              
-    mov r0, r6             
-    bl delayC              
-    bl delay              
-    pop {lr}               
-    mov pc, lr             
+.global parpadeoCentral
+parpadeoCentral:
+    PUSH {R4, R5, R6, LR}
+    LDR R4, =grupos
 
-pattern:
-    .byte 0x00, 0x44, 0x80, 0x25, 0x60, 0x00, 0x3A, 0x91, 0x04, 0x00, 0x48, 0x00
+    MOV R6, #7      // Contador para el ciclo de grupos
+
+loop:
+    LDR R5, [R4], #1  // Carga el valor del grupo de LEDs y avanza el puntero
+    MOV R0, R5
+    BL ledShow
+    BL disp_binary
+    MOV R0, #2
+    BL delay
+    SUBS R6, R6, #1
+    CMP R6, #0
+    BNE loop
+
+    POP {R4, R5, R6, LR}
+    BX LR
+
+.data
+grupos:
+    .byte 0x18, 0x3C, 0x7E, 0xFF, 0x7E, 0x3C, 0x18
