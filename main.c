@@ -10,54 +10,54 @@
 #include "funciones_ass.h"
 
 // Definiciones
-#define PASSWORD_LENGTH 5   // Longitud de la contraseña
+#define PASSWORD_LENGTH 5   // Longitud de la contrasena
 #define NUM_LEDS 8          // Numero de LEDs
 
 // Declaraciones de funciones
 void display_binary(int);                     // Mostrar valor en binario
-void getPassword(char *password);          // Obtener la contraseña del usuario
-void showMenu();                           // Mostrar el menu principal
+void contrasenia(char *password);          // Obtener la contrasena del usuario
+void mostrar_menu();                           // Mostrar el menu principal
 void autoFantastico();                     // Secuencia "Auto Fantastico"
 void choque();                             // Secuencia "Choque"
 //void parpadeo();
 //void luciernagas();
 struct termios modifyTerminalConfig(void); // Configurar terminal
 void restoreTerminalConfig(struct termios);// Restaurar configuracion del terminal
-bool keyHit(int index);                    // Verificar pulsacion de teclas
-void pinSetup(void);                       // Configurar pines
-int delay(int index);                      // Funcion de retardo
+bool teclas(int index);                    // Verificar pulsacion de teclas
+void pines(void);                       // Configurar pines
+int retardo(int index);                      // Funcion de retardo
 void clearInputBuffer();                   // Limpiar el buffer de entrada 
-void turnOff();                            // Apagar los LEDs
-void ledShow(unsigned char output);        // Mostrar LEDs
+void apagar_leds();                            // Apagar los LEDs
+void mostrar_leds(unsigned char output);        // Mostrar LEDs
 
 // Variables globales
 const unsigned char led[NUM_LEDS] = {14, 15, 18, 23, 24, 25, 8, 7}; // Pines de los LEDs
-int delayTime[] = {10000, 10000, 10000, 10000};                    // Tiempo de retardo inicial
+int retardoTime[] = {10000, 10000, 10000, 10000};                    // Tiempo de retardo inicial
 
-// Función principal
+// Funcion principal
 int main(void) {
-    pinSetup(); // Inicializar los pines de los LEDs
-    char setPassword[PASSWORD_LENGTH] = {'1', '2', '3', '4', '5'}; // Contraseña predeterminada
-    char passwordInput[PASSWORD_LENGTH]; // Arreglo para la contraseña ingresada por el usuario
-    // Recepción de la contraseña y validación
+    pines(); // Inicializar los pines de los LEDs
+    char setPassword[PASSWORD_LENGTH] = {'1', '2', '3', '4', '5'}; // Contrasena predeterminada
+    char passwordInput[PASSWORD_LENGTH]; // Arreglo para la contrasena ingresada por el usuario
+    // Recepcion de la contrasena y validacion
     for (int i = 0; i < 3; i++) { // Permitir hasta 3 intentos
-        bool passwordFlag = true; // Bandera para indicar si la contraseña es correcta
-        getPassword(passwordInput); // Obtener la contraseña del usuario
-        // Verificar la contraseña
+        bool passwordFlag = true; // Bandera para indicar si la contrasena es correcta
+        contrasenia(passwordInput); // Obtener la contrasena del usuario
+        // Verificar la contrasena
         for (int j = 0; j < PASSWORD_LENGTH; j++) {
             if (setPassword[j] != passwordInput[j]) { // Comparar caracteres
-                passwordFlag = false; // Si hay una diferencia, la contraseña es incorrecta
+                passwordFlag = false; // Si hay una diferencia, la contrasena es incorrecta
                 break;
             }
         }
-        // Si la contraseña es correcta, mostrar el menú
+        // Si la contrasena es correcta, mostrar el menu
         if (passwordFlag) {
             printf("\n=====================================\n");
             printf("       ¡Acceso concedido! Bienvenido  \n");
             printf("=====================================\n");
-            showMenu();
+            mostrar_menu();
             printf("\n=====================================\n");
-            printf("         Sesión terminada, ¡adiós!    \n");
+            printf("         Sesion terminada, ¡adios!    \n");
             printf("=====================================\n");
             break;
         } else {
@@ -69,7 +69,7 @@ int main(void) {
     return 0; // Terminar el programa
 }
 
-// Función para mostrar un valor en binario
+// Funcion para mostrar un valor en binario
 void display_binary(int i) {
     int t;
     for (t = 128; t > 0; t = t / 2) { // Iterar sobre los bits
@@ -79,8 +79,8 @@ void display_binary(int i) {
     fflush(stdout); // Vaciar el buffer de salida
     printf("\r");   // Retorno de carro
 }
-// Función para obtener la contraseña del usuario
-void getPassword(char *password) {
+// Funcion para obtener la contrasenia del usuario
+void contrasenia(char *password) {
     struct termios oldattr = modifyTerminalConfig(); // Configurar el terminal
     printf("Ingrese su clave: ");
     for (int i = 0; i < PASSWORD_LENGTH; i++) {
@@ -91,27 +91,27 @@ void getPassword(char *password) {
     restoreTerminalConfig(oldattr); // Restaurar configuracion del terminal
     printf("\n");
 }
-// Función para mostrar el menú
-void showMenu() {
+// Funcion para mostrar el menu
+void mostrar_menu() {
     int option;
     do {
         clearInputBuffer(); // Limpiar el buffer de entrada
         printf("\n=====================================\n");
         printf("            MENU PRINCIPAL            \n");
         printf("=====================================\n");
-        printf("1. Auto Fantástico                   \n");
+        printf("1. Auto Fantastico                   \n");
         printf("2. El Choque                         \n");
         printf("3. Parpadeo                          \n");
-        printf("4. Luciérnagas                       \n");
+        printf("4. Luciernagas                       \n");
         printf("0. Salir                             \n");
         printf("=====================================\n");
-        printf("Seleccione una opción: ");
-        scanf("%d", &option); // Leer la opción seleccionada
+        printf("Seleccione una opcion: ");
+        scanf("%d", &option); // Leer la opcion seleccionada
         printf("\n");
 
         switch (option) {
             case 1:
-                autoFantastico(); // Ejecutar la secuencia "Auto Fantástico"
+                autoFantastico(); // Ejecutar la secuencia "Auto Fantastico"
                 break;
             case 2:
                 choque(); // Ejecutar la secuencia "Choque"
@@ -120,15 +120,15 @@ void showMenu() {
                 parpadeo(); // Ejecutar la secuencia "Parpadeo"
                 break;
             case 4:
-                luciernagas(); // Ejecutar la secuencia "Luciérnagas"
+                luciernagas(); // Ejecutar la secuencia "Luciernagas"
                 break;
             case 0:
                 printf("Saliendo...\n"); // Salir del programa
                 break;
             default:
-                printf("Seleccione una opción válida\n"); // Mensaje de error
+                printf("Seleccione una opcion valida\n"); // Mensaje de error
         }
-    } while (option != 0); // Repetir hasta que se seleccione la opción de salir
+    } while (option != 0); // Repetir hasta que se seleccione la opcion de salir
 }
 
 // Secuencia "Auto Fantastico"
@@ -141,21 +141,21 @@ void autoFantastico() {
     while (true) {
         output = 0x80; // Comenzar con el bit mas significativo
         for (int i = 0; i < NUM_LEDS; i++) {
-            ledShow(output); // Mostrar el valor en los LEDs
+            mostrar_leds(output); // Mostrar el valor en los LEDs
             display_binary(output); // Mostrar el valor en binario en la pantalla
             output >>= 1; // Desplazar a la derecha
-            if (delay(0) == 0) { // Esperar el retardo y verificar si se presiono una tecla
-                turnOff(); // Apagar los LEDs
+            if (retardo(0) == 0) { // Esperar el retardo y verificar si se presiono una tecla
+                apagar_leds(); // Apagar los LEDs
                 return; // Salir de la secuencia
             }
         }
         output = 0x02; // Comenzar con el segundo bit mas bajo
         for (int i = 0; i < 6; i++) {
-            ledShow(output); // Mostrar el valor en los LEDs
+            mostrar_leds(output); // Mostrar el valor en los LEDs
             display_binary(output); // Mostrar el valor en binario en la pantalla
             output <<= 1; // Desplazar a la izquierda
-            if (delay(0) == 0) { // Esperar el retardo y verificar si se presiono una tecla
-                turnOff(); // Apagar los LEDs
+            if (retardo(0) == 0) { // Esperar el retardo y verificar si se presiono una tecla
+                apagar_leds(); // Apagar los LEDs
                 return; // Salir de la secuencia
             }
         }
@@ -173,12 +173,12 @@ void choque() {
         aux2 = 0x01; // LED menos significativo
         for (int i = 0; i < 7; i++) {
             output = aux1 | aux2; // Combinar los dos LEDs
-            ledShow(output); // Mostrar el valor en los LEDs
+            mostrar_leds(output); // Mostrar el valor en los LEDs
             display_binary(output); // Mostrar el valor en binario en la pantalla
             aux1 >>= 1; // Desplazar aux1 a la derecha
             aux2 <<= 1; // Desplazar aux2 a la izquierda
-            if (delay(1) == 0) { // Esperar el retardo y verificar si se presiono una tecla
-                turnOff(); // Apagar los LEDs
+            if (retardo(1) == 0) { // Esperar el retardo y verificar si se presiono una tecla
+                apagar_leds(); // Apagar los LEDs
                 return; // Salir de la secuencia
             }
         }
@@ -194,10 +194,10 @@ void choque() {
     unsigned char output;
     while (true) {
         output = rand() % 256; // Generate random pattern
-        ledShow(output);
+        mostrar_leds(output);
         display_binary(output);
-        if (delay(0) == 0) {
-            turnOff();
+        if (retardo(0) == 0) {
+            apagar_leds();
             return;
         }
         adjustSpeed(0); // Adjust speed
@@ -212,17 +212,17 @@ void parpadeo() {
 
     unsigned char output = 0xFF;
     while (true) {
-        ledShow(output);
+        mostrar_leds(output);
         display_binary(output);
-        if (delay(1) == 0) {
-            turnOff();
+        if (retardo(1) == 0) {
+            apagar_leds();
             return;
         }
         output = ~output;
     }
 }*/
 
-// Configuración del terminal
+// Configuracion del terminal
 struct termios modifyTerminalConfig(void) {
     struct termios oldattr, newattr;
     tcgetattr(STDIN_FILENO, &oldattr); // Obtener configuracion actual del terminal
@@ -231,22 +231,22 @@ struct termios modifyTerminalConfig(void) {
     tcsetattr(STDIN_FILENO, TCSANOW, &newattr); // Aplicar nueva configuracion
     return oldattr; // Devolver configuracion anterior
 }
-// Restaurar la configuración del terminal
+// Restaurar la configuracion del terminal
 void restoreTerminalConfig(struct termios oldattr) {
     tcsetattr(STDIN_FILENO, TCSANOW, &oldattr); // Restaurar configuracion anterior
 }
-// Verificar la pulsación de teclas
-bool keyHit(int index) {
+// Verificar la pulsacion de teclas
+bool teclas(int index) {
     struct termios oldattr = modifyTerminalConfig();
     int ch, oldf;
     oldf = fcntl(STDIN_FILENO, F_GETFL, 0); // Obtener flags actuales
     fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK); // Establecer modo no bloqueante
     ch = getchar(); // Leer caracter
-    if (ch == 'u' && delayTime[index] > 100) {
-        delayTime[index] -= 100; // Aumentar la velocidad
+    if (ch == 'u' && retardoTime[index] > 100) {
+        retardoTime[index] -= 100; // Aumentar la velocidad
     }
     if (ch == 'd') {
-        delayTime[index] += 100; // Disminuir la velocidad
+        retardoTime[index] += 100; // Disminuir la velocidad
     }
     restoreTerminalConfig(oldattr); // Restaurar configuracion del terminal
     fcntl(STDIN_FILENO, F_SETFL, oldf); // Restaurar flags originales
@@ -257,23 +257,23 @@ bool keyHit(int index) {
     return false; // No se presiono ESC
 }
 // Inicializar los pines
-void pinSetup(void) {
+void pines(void) {
     pioInit(); // Inicializar EasyPIO
     for (int i = 0; i < NUM_LEDS; i++) {
         pinMode(led[i], OUTPUT); // Establecer pines como salida
     }
 }
 // Mostrar LEDs
-void ledShow(unsigned char output) {
+void mostrar_leds(unsigned char output) {
     for (int j = 0; j < NUM_LEDS; j++) {
         digitalWrite(led[j], (output >> j) & 1); // Escribir valor en los pines
     }
 }
-// Función de retardo para las secuencias
-int delay(int index) {
-    for (int i = delayTime[index]; i > 0; i -= 100) {
+// Funcion de retardo para las secuencias
+int retardo(int index) {
+    for (int i = retardoTime[index]; i > 0; i -= 100) {
         usleep(100); // Retardo en microsegundos
-        if (keyHit(index)) {
+        if (teclas(index)) {
             return 0; // Si se presiono una tecla, salir
         }
     }
@@ -288,7 +288,7 @@ void clearInputBuffer() {
     }
 }
 // Apagar los LEDs
-void turnOff() {
+void apagar_leds() {
     unsigned char off = 0x00; // Valor para apagar los LEDs
-    ledShow(off); // Apagar los LEDs
+    mostrar_leds(off); // Apagar los LEDs
 }
