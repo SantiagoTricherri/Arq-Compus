@@ -13,7 +13,7 @@ loopLuciernagas:
     AND R4, R0, #0xFF    // Mask to get a random 8-bit number
 
     MOV R0, R4
-    BL disp_binary
+    BL display_binary
 
     MOV R0, R4
     BL ledShow
@@ -36,7 +36,7 @@ parpadeo:
 
 loopParpadeo:
     MOV R0, R4
-    BL disp_binary
+    BL display_binary
 
     MOV R0, R4
     BL ledShow
