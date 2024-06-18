@@ -28,7 +28,6 @@ int delay(int index);                      // Funcion de retardo
 void clearInputBuffer();                   // Limpiar el buffer de entrada 
 void turnOff();                            // Apagar los LEDs
 void ledShow(unsigned char output);        // Mostrar LEDs
-void adjustSpeed(int index);
 
 // Variables globales
 const unsigned char led[NUM_LEDS] = {14, 15, 18, 23, 24, 25, 8, 7}; // Pines de los LEDs
@@ -211,19 +210,6 @@ void parpadeo() {
         output = ~output;
     }
 }*/
-
-void adjustSpeed(int index) {
-    struct termios oldattr = modifyTerminalConfig();
-    int ch = getchar();
-    if(ch == 119) { // W key
-        if(delayTime[index] > 1000) {
-            delayTime[index] -= 1000;
-        }
-    } else if(ch == 115) { // S key
-        delayTime[index] += 1000;
-    }
-    restoreTerminalConfig(oldattr);
-}
 
 // Configuración del terminal
 struct termios modifyTerminalConfig(void) {
