@@ -1,85 +1,32 @@
 .text
+
 .global cohete
 
-.extern disp_binary
 .extern ledShow
-.extern delay
+.extern disp_binary
 .extern turnOff
+.extern delay
+.extern keyHit
 
 cohete:
-    PUSH {R4, R5, R6, R7, LR}   
-
-    MOV R4, #10                  
-    MOV R5, #0x01               
+    PUSH {R4, R5, R6, R7, LR}
+    
+    // Inicializar variables
+    MOV R7, #10        
+    MOV R5, #8         
+    MOV R6, #5         
+    MOV R4, #10        
 
 launch:
-    BL printf                   
-    MOV R4, #8                   
-    MOV R6, #700                 
-
+    
+    MOV R3, #0        
 launch_loop:
-    CMP R4, #0                   
-    BEQ flight                 
+    CMP R3, R5        
+    BGE flight        
 
-    MOV R5, #0x01                
-    B launch_loop_inner          
-
-flight:
-    BL printf                   
-    MOV R4, #5                  
-    MOV R6, #10000               
-
-flight_loop:
-    CMP R4, #0                  
-    BEQ explosion               
-
-    MOV R5, #0xFF                
-    BL ledShow                  
-    MOV R0, R5                   
-    BL disp_binary              
-    MOV R0, R6                   
-    BL delay                     
-
-    MOV R5, #0x00               
-    BL ledShow                  
-    MOV R0, R5                   
-    BL disp_binary               
-    MOV R0, R6                  
-    BL delay                     
-
-    SUBS R4, R4, #1              
-    B flight_loop                
-explosion:
-    BL printf                   
-    MOV R4, #10                 
-    MOV R6, #10000               
-
-explosion_loop:
-    CMP R4, #0                  
-    BEQ reset_delay              
-
-    MOV R5, #0xAA               
-    BL ledShow                   
-    MOV R0, R5                  
-    BL disp_binary              
-    MOV R0, R6                   
-    BL delay                    
-
-    MOV R5, #0x55               
-    BL ledShow                   
-    MOV R0, R5                   
-    BL disp_binary               
-    MOV R0, R6                   
-    BL delay                    
-
-    SUBS R4, R4, #1             
-    B explosion_loop            
-
-reset_delay:
-    MOV R6, #10000              
-    B launch                     
-
-.end
+    MOV R0, #1
+    LSL R0, R0, R3    
+    BL ledShow        
     MOV R0, R0        
     BL disp_binary   
 
@@ -217,7 +164,7 @@ exit_luciernagas:
 
 .data
 pattern:
-    .word 0x00, 0x44, 0x80, 0x25, 0x60, 0x00, 0x3A, 0x91, 0x04, 0x00, 0x48, 0x00  
+    .word 0x00, 0x44, 0x80, 0x25, 0x60, 0x00, 0x3A, 0x91, 0x04, 0x00, 0x48, 0x00   
 
 .end
 
