@@ -7,7 +7,7 @@
 #include <ncurses.h>
 #include <time.h>
 #include "EasyPIO.h"
-#include "assembly_functions.h"
+#include "funciones_ass.h"
 
 // Definiciones
 #define PASSWORD_LENGTH 5   // Longitud de la contraseña
