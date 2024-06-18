@@ -1,6 +1,8 @@
-#ifndef PROYECTO_ASSEMBLY_FUNCTIONS_H
-#define PROYECTO_ASSEMBLY_FUNCTIONS_H
-extern void cascadaDescendente(void);
-extern void parpadeoCentral(void);
+#ifndef PROYECTO_FUNCIONES_ASS_H
+#define PROYECTO_FUNCIONES_ASS_H
 
-#endif // PROYECTO_ASSEMBLY_FUNCTIONS_H
+extern void carrera(void);
+extern void parpadeo(void);
+extern void adjustSpeed(int index);
+
+#endif //PROYECTO_FUNCIONES_ASS_H
