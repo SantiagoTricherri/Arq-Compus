@@ -185,6 +185,26 @@ void choque() {
     }
 }
 
+/*
+// Función para mostrar la secuencia "Choque"
+void choque() {
+    printf("\n--- Choque ---\n");
+    printf("Presione esc para finalizar la secuencia\n");
+    printf("Presione U para aumentar la velocidad\n");
+    printf("Presione D para disminuir la velocidad\n");
+int tabla[8] = {0x81, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x81};
+    while (true) {
+        for (int i = 0; i < 8; i++) {
+            mostrar_leds(tabla[i]);       // Mostrar el valor en los LEDs
+            display_binary(tabla[i]);     // Mostrar el valor en binario en la pantalla
+            if (retardo(1) == 0) {      // Esperar el retardo y verificar si se presionó una tecla
+                apagar_leds();          // Apagar los LEDs
+                return;                 // Salir de la secuencia
+            }
+        }
+    }
+}*/
+
 /*void luciernagas() {
     printf("Presione esc para finalizar la secuencia\n");
     printf("Presione U para aumentar la velocidad\n");
@@ -202,6 +222,21 @@ void choque() {
         }
         adjustSpeed(0); // Adjust speed
     }
+}
+
+void luciernagas() {
+    printf("INICIANDO LUCIERNAGAS...\n");
+    int tabla[12] = {0x00, 0x44, 0x80, 0x25, 0x60, 0x00, 0x3A, 0x91, 0x04, 0x00, 0x48, 0x00};
+    getchar();
+    for (int i = 0; i < 12; i++) {
+        display_binary(tabla[i]);
+        mostrar_leds(tabla[i]);
+        if (retardo(0) == 0) {
+            apagar_leds();
+            return;
+        }
+         adjustSpeed(0); // Adjust speed
+}
 }
 
 void parpadeo() {
