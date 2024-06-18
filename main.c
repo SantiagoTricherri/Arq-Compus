@@ -65,8 +65,8 @@ int main(void) {
 void disp_binary(int i) {
     int t;
     for (t = 128; t > 0; t = t / 2) { // Iterar sobre los bits
-        if (i & t) printf("1 ");      // Si el bit esta encendido, mostrar "1"
-        else printf("0 ");            // Si el bit esta apagado, mostrar "0"
+        if (i & t) printf("* ");      // Si el bit esta encendido, mostrar "1"
+        else printf("_ ");            // Si el bit esta apagado, mostrar "0"
     }
     fflush(stdout); // Vaciar el buffer de salida
     printf("\r");   // Retorno de carro
